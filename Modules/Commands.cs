@@ -12,25 +12,16 @@ using Microsoft.Extensions.Configuration;
 namespace CaliComp.Modules
 {
     // for commands to be available, and have the Context passed to them, we must inherit ModuleBase
-    public class ExampleCommands : ModuleBase
+    public class Commands : ModuleBase
     {
-        [Command("hello")]
-        public async Task HelloCommand()
+
+        [Command("honk")]
+        public async Task Honk()
         {
-            // initialize empty string builder for reply
-            var sb = new StringBuilder();
+            var honk = "https://i.kym-cdn.com/photos/images/original/000/884/206/3d9.gif";
 
-            // get user info from the Context
-            var user = Context.User;
-            
-            // build out the reply
-            sb.AppendLine($"You are -> {user.Username}");
-            sb.AppendLine("I must now say, World!");
-
-            // send simple string reply
-            await ReplyAsync(sb.ToString());
+            await ReplyAsync(honk.ToString());
         }
-
         [Command("8ball")]
         [Alias("ask")]
         [RequireUserPermission(GuildPermission.KickMembers)]
@@ -45,13 +36,12 @@ namespace CaliComp.Modules
             var replies = new List<string>();
 
             // add our possible replies
-            replies.Add("yes");
-            replies.Add("no");
-            replies.Add("maybe");
-            replies.Add("hazzzzy....");
+            replies.Add("Yes");
+            replies.Add("No");
+            replies.Add("Maybe");
+            replies.Add("Reply hazy, try again later...");
 
             // time to add some options to the embed (like color and title)
-            embed.WithColor(new Color(0, 255,0));
             embed.Title = "Welcome to the 8-ball!";
             
             // we can get lots of information from the Context that is passed into the commands
@@ -72,34 +62,9 @@ namespace CaliComp.Modules
                 var answer = replies[new Random().Next(replies.Count - 1)];
                 
                 // build out our reply with the handy StringBuilder
-                sb.AppendLine($"You asked: **\"{args}\"**...");
+                sb.AppendLine($"You asked: **\"{args}\"**");
                 sb.AppendLine();
-                sb.AppendLine($"...The 8-ball answers: **\"{answer}\"**");
-
-                // bonus - let's switch out the reply and change the color based on it
-                switch (answer) 
-                {
-                    case "yes":
-                    {
-                        embed.WithColor(new Color(0, 255, 0));
-                        break;
-                    }
-                    case "no":
-                    {
-                        embed.WithColor(new Color(255, 0, 0));
-                        break;
-                    }
-                    case "maybe":
-                    {
-                        embed.WithColor(new Color(255,255,0));
-                        break;
-                    }
-                    case "hazzzzy....":
-                    {
-                        embed.WithColor(new Color(255,0,255));
-                        break;
-                    }
-                }
+                sb.AppendLine($"The 8-ball answers: **\"{answer}\"**");
             }
 
             // now we can assign the description of the embed to the contents of the StringBuilder we created
