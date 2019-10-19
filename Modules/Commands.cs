@@ -3,27 +3,59 @@ using Discord.Net;
 using Discord.WebSocket;
 using Discord.Commands;
 using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
+using CaliComp.Services;
 
 namespace CaliComp.Modules
 {
     // for commands to be available, and have the Context passed to them, we must inherit ModuleBase
+    
     public class Commands : ModuleBase
     {
+        private readonly CommandService _commands;
+
+        public Commands(CommandService commands)
+        {
+            _commands = commands;
+        }
+        [Command("help")]
+        [Summary("Shows all known commands")]
+        public async Task Help()
+        {
+            List<CommandInfo> commands = _commands.Commands.ToList();
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+
+            foreach (CommandInfo command in commands)
+            {
+                // Get the command Summary attribute information
+                string embedFieldText = command.Summary ?? "No description available\n";
+
+                embedBuilder.AddField(command.Name, embedFieldText);
+            }
+
+            await ReplyAsync("Here's a list of commands and their description: ", false, embedBuilder.Build());
+        }
+
 
         [Command("honk")]
+        [Summary("Gets all animated gifs of Chen honking in assets/images/honk and then randomly uploads one")]
         public async Task Honk()
         {
-            var honk = "https://i.kym-cdn.com/photos/images/original/000/884/206/3d9.gif";
+            //Gets all animated gifs of Chen honking in assets/images/honk and then randomly uploads one
+            string[] fileArray = Directory.GetFiles(@"assets/images/honk", "*.gif");
 
-            await ReplyAsync(honk.ToString());
+            var fileName = fileArray[new Random().Next(fileArray.Count() - 1)];
+
+            await Context.Channel.SendFileAsync(fileName);
         }
+
         [Command("8ball")]
-        [Alias("ask")]
+        [Summary("Ask a question to the magic 8ball")]
         [RequireUserPermission(GuildPermission.KickMembers)]
         public async Task AskEightBall([Remainder]string args = null)
         {
