@@ -49,6 +49,8 @@ namespace CaliComp.Modules
         public async Task Transcribe()
         {
             //Collect all messages from the channel. Also yes, I'm using maxint. fuck the police.
+            //Warning: this is a REALLY hacky way of doing this and WILL disconnect the bot several times for very large channels.
+            //Just wait it out for a bit.
             IEnumerable<IMessage> messages = await Context.Channel.GetMessagesAsync(int.MaxValue).FlattenAsync();
             //Create a stringbuilder for what will be written to the text file
             var sb = new StringBuilder();
