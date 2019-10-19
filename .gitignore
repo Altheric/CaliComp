@@ -2,3 +2,4 @@
 /obj
 *.json
 /assets
+/output

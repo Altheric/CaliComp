@@ -67,7 +67,7 @@ namespace CaliComp
 
         private Task ReadyAsync()
         {
-            Console.WriteLine($"[{DateTime.Now.ToString("HH:mm:ss")}] {_client.CurrentUser} has connected.");
+            Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss")} {_client.CurrentUser} has connected.");
             return Task.CompletedTask;
         }
 
