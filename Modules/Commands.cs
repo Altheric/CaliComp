@@ -44,15 +44,27 @@ namespace CaliComp.Modules
         }
 
         [Command("transcribe")]
-        [Summary("transcribes current channel to a .txt file")]
+        [Summary("transcribes current channel to a .txt file. ADMIN ONLY")]
+        [RequireUserPermission(GuildPermission.Administrator)]
         public async Task Transcribe()
         {
             //Collect all messages from the channel. Also yes, I'm using maxint. fuck the police.
             IEnumerable<IMessage> messages = await Context.Channel.GetMessagesAsync(int.MaxValue).FlattenAsync();
             //Create a stringbuilder for what will be written to the text file
             var sb = new StringBuilder();
-
-            String path = @"output/test.txt";
+            //name of the Server, and format it for a better filename
+            String serverName = Context.Guild.Name.ToLower().Replace(" ", "_").Replace("-", "_");
+            //name of the channel, and format it for a better filename
+            String channelName = Context.Channel.Name.ToLower().Replace(" ", "_").Replace("-", "_");
+            //count of messages, just used for the novelty of knowing just how many messages there are
+            int msgCount = 0;
+            //Check for existence of directory to write to
+            if(!Directory.Exists("output"))
+            {
+                Directory.CreateDirectory("output");
+            }
+            //Path to write towards to
+            String path = @"output/transcribed_"+serverName+"@"+channelName+".txt";
             //Goes through every message in the IEnumerable. Reverse the order so it oldest is first.
             foreach(Discord.IMessage message in messages.Reverse())
             {
@@ -101,11 +113,13 @@ namespace CaliComp.Modules
                         sb.AppendLine(attachment.ProxyUrl);
                     }
                 }
+                msgCount++;
                 sb.AppendLine();
             }
+            sb.AppendLine($"Total amount of messages: {msgCount}");
             System.IO.File.WriteAllText(path, sb.ToString());
 
-            await ReplyAsync("Done transcribing!");
+            await ReplyAsync($"Done transcribing {msgCount} messages!");
         }
 
         [Command("honk")]
