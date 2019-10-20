@@ -21,7 +21,7 @@ namespace CaliComp.Modules
         public async Task Honk()
         {
             //Gets all animated gifs of Chen honking in assets/images/honk and then randomly uploads one
-            string[] fileArray = Directory.GetFiles(_config["LocalAssetsPath"]+"/images/honk", "*.gif");
+            string[] fileArray = Directory.GetFiles(_config["LocalImagePath"]+"/honk", "*.gif");
 
             var fileName = fileArray[new Random().Next(fileArray.Count() - 1)];
 
