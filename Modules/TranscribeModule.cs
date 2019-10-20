@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 
 namespace CaliComp.Modules
 {
@@ -13,7 +14,11 @@ namespace CaliComp.Modules
     
     public class TranscribeModule : ModuleBase
     {
-
+        private readonly IConfiguration _config;
+        public TranscribeModule(IConfiguration config)
+        {
+            _config = config;
+        }
         [Command("transcribe")]
         [Summary("transcribes current channel to a .txt file. ADMIN ONLY")]
         [RequireUserPermission(GuildPermission.Administrator)]
@@ -31,14 +36,16 @@ namespace CaliComp.Modules
             String channelName = Context.Channel.Name.ToLower().Replace(" ", "_").Replace("-", "_");
             //count of messages, just used for the novelty of knowing just how many messages there are
             int msgCount = messages.Count();
+            //Path to write towards to
+            String path = _config["LocalOutputPath"]+"/transriptions/";
             //Check for existence of directory to write to
-            if(!Directory.Exists("output"))
+            if(!Directory.Exists(path))
             {
                 //If not, create an output directory
-                Directory.CreateDirectory("output");
+                Directory.CreateDirectory(path);
             }
-            //Path to write towards to
-            String path = @"output/transcribed_"+serverName+"@"+channelName+".txt";
+            //Name of the file
+            String fileName = "transcribed_"+serverName+"@"+channelName+".txt";
             //Goes through every message in the IEnumerable. Reverse the order so it oldest is first.
             foreach(Discord.IMessage message in messages.Reverse())
             {
@@ -90,7 +97,7 @@ namespace CaliComp.Modules
                 sb.AppendLine();
             }
             sb.AppendLine($"Total amount of messages: {msgCount}");
-            System.IO.File.WriteAllText(path, sb.ToString());
+            System.IO.File.WriteAllText(path+fileName, sb.ToString());
 
             await ReplyAsync($"Done transcribing {msgCount} messages!");
         }

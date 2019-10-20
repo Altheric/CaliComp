@@ -1,5 +1,4 @@
 using Discord;
-using Discord.WebSocket;
 using Discord.Commands;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,12 +6,12 @@ using System.Collections.Generic;
 
 namespace CaliComp.Modules
 {
-    // for commands to be available, and have the Context passed to them, we must inherit ModuleBase
+    // Contains basic commands for the bot to use
     
     public class BaseCommandModule : ModuleBase
     {
         private readonly CommandService _commands;
-        public BaseCommandModule(CommandService commands, DiscordSocketClient client)
+        public BaseCommandModule(CommandService commands)
         {
             _commands = commands;
         }
