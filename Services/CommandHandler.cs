@@ -88,7 +88,6 @@ namespace CaliComp.Services
                 return;
             }
                 
-
             // failure scenario, let's let the user know
             await context.Channel.SendMessageAsync($"Sorry, {context.User.Username}, something went wrong: {result}!");
         }        

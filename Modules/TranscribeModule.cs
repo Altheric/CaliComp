@@ -37,7 +37,7 @@ namespace CaliComp.Modules
             //count of messages, just used for the novelty of knowing just how many messages there are
             int msgCount = messages.Count();
             //Path to write towards to
-            String path = _config["LocalOutputPath"]+"/transriptions/";
+            String path = _config["LocalOutputPath"]+"/transcriptions/";
             //Check for existence of directory to write to
             if(!Directory.Exists(path))
             {
