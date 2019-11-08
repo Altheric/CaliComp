@@ -46,6 +46,8 @@ namespace CaliComp.Modules
             }
             //Name of the file
             String fileName = "transcribed_"+serverName+"@"+channelName+".txt";
+            //Path to write to
+            String writePath = path+fileName;
             //Goes through every message in the IEnumerable. Reverse the order so it oldest is first.
             foreach(Discord.IMessage message in messages.Reverse())
             {
@@ -97,9 +99,26 @@ namespace CaliComp.Modules
                 sb.AppendLine();
             }
             sb.AppendLine($"Total amount of messages: {msgCount}");
-            System.IO.File.WriteAllText(path+fileName, sb.ToString());
-
-            await ReplyAsync($"Done transcribing {msgCount} messages!");
+            System.IO.File.WriteAllText(writePath, sb.ToString());
+            FileInfo fileInfo = new FileInfo(writePath);
+            //Filesize of the uploaded file
+            long fileSize = fileInfo.Length;
+            //Check if file is bigger than 8mb or 8388608 bytes
+            if(fileSize < 8388608)
+            {
+                //if filesize is smaller than 8mb, DM the command user the file.
+                await Context.Channel.SendMessageAsync($"Done transcribing the messages! Check your DM's!");
+                await Context.User.SendMessageAsync($"I've transcribed {msgCount} messages, below is the transcribed .txt file.");
+                await Context.User.SendFileAsync(writePath);
+                File.Delete(writePath);
+            }
+            else
+            {
+                //Else tell the user that it aint gonna work.
+                await Context.Channel.SendMessageAsync($"Done transcribing the messages! Check your DM's!");
+                await Context.User.SendMessageAsync($"I've transcribed {msgCount} messages, however the file size was too big to upload to Discord. Please contact the bot owner to hand you the file.");
+            }
+            
         }
     }
 }
