@@ -103,7 +103,7 @@ namespace CaliComp.Modules
             FileInfo fileInfo = new FileInfo(writePath);
             //Filesize of the uploaded file
             long fileSize = fileInfo.Length;
-            //Check if file is bigger than 8mb or 8388608 bytes
+            //Check if file is smaller than 8mb or 8388608 bytes
             if(fileSize < 8388608)
             {
                 //if filesize is smaller than 8mb, DM the command user the file.
