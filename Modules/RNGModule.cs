@@ -14,7 +14,6 @@ namespace CaliComp.Modules
 
         [Command("8ball")]
         [Summary("Ask a question to the magic 8ball")]
-        [RequireUserPermission(GuildPermission.KickMembers)]
         public async Task AskEightBall([Remainder]string args = null)
         {
             // I like using StringBuilder to build out the reply
@@ -46,7 +45,7 @@ namespace CaliComp.Modules
             {
                 // if we have a question, let's give an answer!
                 // get a random number to index our list with (arrays start at zero so we subtract 1 from the count)
-                var answer = replies[new Random().Next(replies.Count - 1)];
+                var answer = replies[new Random().Next(replies.Count)];
                 
                 // build out our reply with the handy StringBuilder
                 sb.AppendLine($"You asked: **\"{args}\"**");
