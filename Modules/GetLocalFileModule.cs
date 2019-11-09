@@ -27,5 +27,15 @@ namespace CaliComp.Modules
 
             await Context.Channel.SendFileAsync(fileName);
         }
+        [Command("gotobed")]
+        [Summary("Get an animated gif related to going to bed")]
+        public async Task GoToBed()
+        {
+            string[] fileArray = Directory.GetFiles(_config["LocalImagePath"]+"/gotobed", "*.gif");
+
+            var fileName = fileArray[new Random().Next(fileArray.Count() - 1)];
+
+            await Context.Channel.SendFileAsync(fileName);
+        }
     }
 }
