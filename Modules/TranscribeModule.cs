@@ -24,6 +24,7 @@ namespace CaliComp.Modules
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task Transcribe()
         {
+            #region Base Variables
             //Collect all messages from the channel. Also yes, I'm using maxint. fuck the police.
             //Warning: this is a REALLY hacky way of doing this and WILL disconnect the bot several times for very large channels.
             //Just wait it out for a bit.
@@ -38,6 +39,7 @@ namespace CaliComp.Modules
             int msgCount = messages.Count();
             //Path to write towards to
             String path = _config["LocalOutputPath"]+"/transcriptions/";
+            #endregion
             //Check for existence of directory to write to
             if(!Directory.Exists(path))
             {
